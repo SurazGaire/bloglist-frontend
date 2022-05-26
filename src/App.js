@@ -5,6 +5,11 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [newBlogTitle, setNewBlogTitle] = useState("");
+  const [newBlogAuthor, setNewBlogAuthor] = useState("");
+
+  const [newBlogUrl, setNewBlogUrl] = useState("");
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMesssage, setErrorMessage] = useState(null);
@@ -20,7 +25,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      // blogService.setToken(user.token);
+      blogService.setToken(user.token);
     }
   }, []);
 
@@ -34,11 +39,11 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    console.log(`Username and password is filled`);
     try {
       const user = await loginService.login({ username, password });
+      console.log(`Username and password is filled`);
       window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
-      // blogService.setToken(user.token);
+      blogService.setToken(user.token);
       console.log(user);
       setUser(user);
       setUsername("");
@@ -51,12 +56,29 @@ const App = () => {
     }
   };
 
+  const addBlog = (event) => {
+    event.preventDefault();
+    const newObject = {
+      title: newBlogTitle,
+      author: newBlogAuthor,
+      url: newBlogUrl,
+    };
+
+    blogService.create(newObject).then((returnedBlog) => {
+      console.log(`New blog is added`);
+      setBlogs(blogs.concat(returnedBlog));
+      setNewBlogTitle("");
+      setNewBlogAuthor("");
+      setNewBlogUrl("");
+    });
+  };
+
   const filteredBlog = async () => {
     const loggedUser = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUser) {
       let user = JSON.parse(loggedUser);
       let userId = user.id;
-      const loggedUserBlog = blogs.filter((blog) => blog.user == userId);
+      const loggedUserBlog = blogs.filter((blog) => blog.user === userId);
       console.log(loggedUserBlog);
     }
   };
@@ -86,8 +108,31 @@ const App = () => {
     </form>
   );
 
-  const blogTitles = () => (
+  const addBlogForm = () => (
     <div>
+      <form onSubmit={addBlog}>
+        <h3>Add new blog :</h3>
+        {"\n"}
+        Title :{" "}
+        <input
+          value={newBlogTitle}
+          onChange={(e) => setNewBlogTitle(e.target.value)}
+        />
+        {"\n"}
+        Author :{" "}
+        <input
+          value={newBlogAuthor}
+          onChange={(e) => setNewBlogAuthor(e.target.value)}
+        />
+        {"\n"}
+        Url :
+        <input
+          value={newBlogUrl}
+          onChange={(e) => setNewBlogUrl(e.target.value)}
+        />
+        {"\n"}
+        <button type="submit">Save</button>
+      </form>
       <h2>{user.name} Logged In</h2>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
@@ -104,7 +149,7 @@ const App = () => {
   return (
     <div>
       <Notification message={errorMesssage} />
-      {user === null ? loginForm() : <div>{blogTitles()}</div>}
+      {user === null ? loginForm() : <div>{addBlogForm()}</div>}
     </div>
   );
 };
