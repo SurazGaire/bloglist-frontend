@@ -1,0 +1,20 @@
+h1 {
+    color: green;
+    font-style: italic;
+  }
+  
+  .blog {
+    color: blue;
+    padding: 10px;
+    font-size: 20px;
+  }
+  
+  .error {
+    color: green;
+    background: yellow;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
