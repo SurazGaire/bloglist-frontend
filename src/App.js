@@ -3,7 +3,6 @@ import Blog from "./components/Blog";
 import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
-
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -65,16 +64,16 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     // noteFormRef.current.toggleVisibility();
-    blogService.create(blogObject).then((returnedBlog) => {
+    const blogReturned = blogService.create(blogObject).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
     });
+    if (blogReturned) {
+      setErrorMessage("Blog added successfully");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
-  // if (addBlog) {
-  //   setErrorMessage("Blog added successfully");
-  //   setTimeout(() => {
-  //     setErrorMessage(null);
-  //   }, 5000);
-  // }
 
   return (
     <div>
