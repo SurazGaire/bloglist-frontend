@@ -62,11 +62,10 @@ const App = () => {
     }
   };
 
-  const addBlog = (blogObject) => {
+  const addBlog = async (blogObject) => {
     // noteFormRef.current.toggleVisibility();
-    const blogReturned = blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog));
-    });
+    const blogReturned = await blogService.create(blogObject);
+    setBlogs(blogs.concat(blogReturned));
     if (blogReturned) {
       setErrorMessage("Blog added successfully");
       setTimeout(() => {
@@ -92,7 +91,7 @@ const App = () => {
         </Togglable>
       ) : (
         <div>
-          <Togglable buttonLabel="Create new Form">
+          <Togglable buttonLabel="Create new Blog">
             <BlogForm createBlog={addBlog} />
           </Togglable>
           <h2>{user.name} Logged In</h2>
