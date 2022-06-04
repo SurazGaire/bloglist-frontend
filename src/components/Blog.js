@@ -19,6 +19,7 @@ const Blog = ({ blog }) => {
             author={blog.author}
             url={blog.url}
             likes={blog.likes}
+            blog_id={blog.id}
           ></BlogDetails>
         </BlogToggle>
       </div>
